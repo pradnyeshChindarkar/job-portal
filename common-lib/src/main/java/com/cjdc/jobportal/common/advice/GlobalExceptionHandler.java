@@ -1,4 +1,4 @@
-package advice;
+package com.cjdc.jobportal.common.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,12 +7,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.cjdc.jobportal.common.exception.BadRequest;
+import com.cjdc.jobportal.common.exception.ResourceNotFoundException;
+import com.cjdc.jobportal.common.response.ApiErrorResponse;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import exception.BadRequest;
-import exception.ResourceNotFoundException;
-import response.ApiErrorResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler<T> {

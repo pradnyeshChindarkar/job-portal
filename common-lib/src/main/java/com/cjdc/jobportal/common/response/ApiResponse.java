@@ -1,4 +1,4 @@
-package response;
+package com.cjdc.jobportal.common.response;
 
 public record ApiResponse<T>(boolean success, String message, T data) {
 	public static <T> ApiResponse<T> success(String message, T data) {

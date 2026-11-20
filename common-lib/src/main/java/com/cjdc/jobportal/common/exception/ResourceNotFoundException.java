@@ -1,4 +1,4 @@
-package exception;
+package com.cjdc.jobportal.common.exception;
 
 public class ResourceNotFoundException extends RuntimeException {	
 	public ResourceNotFoundException(String msg) {
