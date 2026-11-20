@@ -1,4 +1,4 @@
-package com.cjdc.jobportal.common.advice;
+	package com.cjdc.jobportal.common.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.cjdc.jobportal.common.exception.BadRequest;
+import com.cjdc.jobportal.common.exception.ConflictException;
 import com.cjdc.jobportal.common.exception.ResourceNotFoundException;
 import com.cjdc.jobportal.common.response.ApiErrorResponse;
 
@@ -39,6 +40,12 @@ public class GlobalExceptionHandler<T> {
 		}
 		ApiErrorResponse body = ApiErrorResponse.fieldError(HttpStatus.BAD_REQUEST.value(), "Invalid data", fieldErrors);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+	}
+	
+	@ExceptionHandler(ConflictException.class)
+	public ResponseEntity<ApiErrorResponse> returnConflictException(ConflictException exc){
+		ApiErrorResponse body = ApiErrorResponse.error(HttpStatus.CONFLICT.value(), exc.getMessage());
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
 	}
 
 }

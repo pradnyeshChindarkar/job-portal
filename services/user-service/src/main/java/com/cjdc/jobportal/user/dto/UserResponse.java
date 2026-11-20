@@ -1,0 +1,6 @@
+package com.cjdc.jobportal.user.dto;
+
+import com.cjdc.jobportal.user.entity.Role;
+
+public record UserResponse(Long id, String name, String email, String phone, Role role) {
+}

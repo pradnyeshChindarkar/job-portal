@@ -10,6 +10,7 @@ public record ApiErrorResponse(
 		Map<String, String> fieldErrors,
 		LocalDateTime timestamps
 		) {
+	
 	public static ApiErrorResponse error(int status,String message) {
 		return new ApiErrorResponse(false, status, message, null, LocalDateTime.now());
 	}
