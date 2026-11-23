@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.cjdc.jobportal.common.exception.BadRequest;
 import com.cjdc.jobportal.common.exception.ConflictException;
 import com.cjdc.jobportal.common.exception.ResourceNotFoundException;
+import com.cjdc.jobportal.common.exception.UnauthorizedException;
 import com.cjdc.jobportal.common.response.ApiErrorResponse;
 
 import java.util.LinkedHashMap;
@@ -46,6 +47,12 @@ public class GlobalExceptionHandler<T> {
 	public ResponseEntity<ApiErrorResponse> returnConflictException(ConflictException exc){
 		ApiErrorResponse body = ApiErrorResponse.error(HttpStatus.CONFLICT.value(), exc.getMessage());
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<ApiErrorResponse> returnUnauthorizationException(UnauthorizedException exc){
+		ApiErrorResponse body  = ApiErrorResponse.error(HttpStatus.UNAUTHORIZED.value(), exc.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
 	}
 
 }

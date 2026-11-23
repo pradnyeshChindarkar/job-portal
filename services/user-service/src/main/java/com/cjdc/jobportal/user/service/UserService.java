@@ -41,6 +41,6 @@ public class UserService {
 		User savedUser = repository.save(user);
 
 		return new UserResponse(savedUser.getId(), savedUser.getFullname(), savedUser.getEmail(), savedUser.getPhone(),
-				savedUser.getRole());
+				savedUser.getRole(),savedUser.getCreatedAt());
 	}
 }
