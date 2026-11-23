@@ -33,6 +33,6 @@ public class AuthService {
 		
 		String token = jwtService.generateToken(user);
 		
-		return new SignInResponse(token, "Bearer" , jwtService.getExpirationSec());		
+		return new SignInResponse(token, "Bearer" , jwtService.getExpirationSec());	
 	}
 }
