@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.cjdc.jobportal.common.exception.BadRequest;
 import com.cjdc.jobportal.common.exception.ConflictException;
+import com.cjdc.jobportal.common.exception.ResourceNotFoundException;
 import com.cjdc.jobportal.common.exception.UnauthorizedException;
 import com.cjdc.jobportal.user.dto.SignupRequest;
 import com.cjdc.jobportal.user.dto.UpdateProfileRequest;
@@ -70,6 +71,17 @@ public class UserService {
 		}
 		String email = authentication.getName().trim().toLowerCase();
 		return repository.findByEmailIgnoreCase(email).orElseThrow(() -> new UnauthorizedException("User not found"));
+	}
+
+	public void deleteByUserId(Long userId, Authentication authentication) {
+		User targetUser = repository.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+		
+		if(authentication != null && authentication.getName() !=null && targetUser.getEmail().equalsIgnoreCase(authentication.getName())) {
+			throw new BadRequest("Admins cannot delete their own account");
+		}
+		
+		repository.delete(targetUser);
 	}
 
 	private UserResponse toUserResponse(User user) {

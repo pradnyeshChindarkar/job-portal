@@ -26,8 +26,11 @@ public class SecurityConfig {
 		http
 		.csrf(csrf -> csrf.disable())
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		.authorizeHttpRequests(
-				auth -> auth.requestMatchers("/api/auth/login","/api/user/**","/api/user").permitAll().anyRequest().authenticated())
+		.authorizeHttpRequests(	auth -> auth
+				.requestMatchers("/api/auth/login","/api/user").permitAll()
+				.requestMatchers("/api/admin/**").hasRole("ADMIN")
+				.anyRequest().authenticated()
+				)
 		.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

@@ -46,4 +46,5 @@ public class UserController {
 		UserResponse response = userService.updateCurrenUserProfile(authentication, request);
 		return ResponseEntity.ok(ApiResponse.success("Profile updated successfully", response));
 	}
+	
 }
