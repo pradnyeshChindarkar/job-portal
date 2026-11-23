@@ -4,3 +4,4 @@ target/
 .settings/
 .env
 *.log
+application.properties
