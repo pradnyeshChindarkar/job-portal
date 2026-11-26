@@ -1,5 +1,10 @@
 package com.cjdc.jobportal.user.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,6 +13,7 @@ import com.cjdc.jobportal.common.exception.BadRequest;
 import com.cjdc.jobportal.common.exception.ConflictException;
 import com.cjdc.jobportal.common.exception.ResourceNotFoundException;
 import com.cjdc.jobportal.common.exception.UnauthorizedException;
+import com.cjdc.jobportal.user.dto.PageResponse;
 import com.cjdc.jobportal.user.dto.SignupRequest;
 import com.cjdc.jobportal.user.dto.UpdateProfileRequest;
 import com.cjdc.jobportal.user.dto.UserResponse;
@@ -51,6 +57,8 @@ public class UserService {
 		User user = resolveAuthenticatedUser(authentication);
 		return toUserResponse(user);
 	}
+	
+	
 
 	public UserResponse updateCurrenUserProfile(Authentication authentication, UpdateProfileRequest request) {
 		User user = resolveAuthenticatedUser(authentication);
@@ -73,6 +81,8 @@ public class UserService {
 		return repository.findByEmailIgnoreCase(email).orElseThrow(() -> new UnauthorizedException("User not found"));
 	}
 
+	
+	@PreAuthorize(value = "hasRole('ADMIN')")
 	public void deleteByUserId(Long userId, Authentication authentication) {
 		User targetUser = repository.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
@@ -83,6 +93,24 @@ public class UserService {
 		
 		repository.delete(targetUser);
 	}
+	
+	@PreAuthorize(value = "hasRole('ADMIN')")
+	public PageResponse<UserResponse> getAllResponse(int page, int size, String sortBy, boolean ascending){
+		int safePage = Math.max(page, 0);
+		int safeSize = Math.min(Math.max(size, 1), 100);
+		
+		Sort.Direction sortByDirection = ascending? Sort.Direction.ASC : Sort.Direction.DESC;
+		
+		String sortByValue = switch (sortBy) {
+		case "name","email","role","id" -> sortBy;
+		default -> "id";
+		};
+		
+		Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(sortByDirection,sortByValue));
+		Page<UserResponse> userResponse = repository.findAll(pageable).map(user -> toUserResponse(user));
+		return PageResponse.from(userResponse);
+	}
+	
 
 	private UserResponse toUserResponse(User user) {
 		return new UserResponse(user.getId(), user.getFullname(), user.getEmail(), user.getPhone(),
